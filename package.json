@@ -1,0 +1,23 @@
+{
+  "name": "v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taptap-kor/uniswap-v2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taptap-kor/uniswap-v2/issues"
+  },
+  "homepage": "https://github.com/taptap-kor/uniswap-v2#readme",
+  "dependencies": {
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0"
+  }
+}
