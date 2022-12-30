@@ -11,6 +11,9 @@ import './interfaces/IUniswapV2Callee.sol';
 contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
+		// uint112에서 112 만큼 이동시켜 uint224로 변환하게 하기위해 필요
+		// 오버플로우 발생 x 
+		// 함수 설명 : https://stackoverflow.com/questions/72644712/math-in-uniswap-uq112xuq112-library
 
     uint public constant MINIMUM_LIQUIDITY = 10**3;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
@@ -25,7 +28,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
 
     uint public price0CumulativeLast;
     uint public price1CumulativeLast;
-    uint public kLast; // reserve0 * reserve1, as of immediately after the most recent liquidity event
+    uint public kLast; 
+		// reserve0 * reserve1, as of immediately after the most recent liquidity event
 
     uint private unlocked = 1;
     modifier lock() {
@@ -34,6 +38,9 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         _;
         unlocked = 1;
     }
+		// modifier(함수변경자) 이해하기
+		// " _; " 위치가 밑에 생성된 function들이 들어갈 위치이며, 그 앞뒤로 unlocked가 0이 되었다 1이 되었다 하는것이다.
+		// 즉 함수가 실행되기 전까지는 lock, 실행 이후는 unlock시키는 코드인 듯 하다. 
 
     function getReserves() public view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast) {
         _reserve0 = reserve0;
