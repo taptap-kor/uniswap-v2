@@ -1,7 +1,7 @@
 // 상속받은 IUniswapV2Pair 컨트랙트 함수 분석
 // UniSwap Guide Link : https://docs.uniswap.org/contracts/v2/reference/smart-contracts/pair
 
-pragma solidity >=0.5.0;
+// 이 내용은 링크 확인후 이해하는게 좋음 : https://ethereum.org/en/developers/tutorials/uniswap-v2-annotated-code/
 
 interface IUniswapV2Pair {
   event Approval(address indexed owner, address indexed spender, uint value);
@@ -42,12 +42,13 @@ interface IUniswapV2Pair {
 
   function MINIMUM_LIQUIDITY() external pure returns (uint);
 	// 모든 페어에 대해 '1000' 리턴 // 반올림 오류를 개선을 하고, 이론상 최소 틱사이즈를 늘리기위해 최소값을 지정.
+	// 그냥 '0' 으로 나누는경우를 피하기 위해 존재한다고 함. 
   function factory() external view returns (address);
 	// factory 주소값을 리턴
   function token0() external view returns (address);
-	// 페어내에서 더 적게 분류된 토큰의 주소값을 리턴
+	// 페어내에서 더 적게 분류된 토큰(페어 컨트랙트내에서 ERC20으로 발행된 토큰)의 주소값을 리턴
   function token1() external view returns (address);
-	// 페어내에서 더 많이 분류된 토큰의 주소값을 리턴
+	// 페어내에서 더 많이 분류된 토큰(페어 컨트랙트내에서 ERC20으로 발행된 토큰)의 주소값을 리턴
   function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
   // 페어에 대한 상호작용이 일어난 시점 직전의 블록타임스탬프를 찍어주고 0,1의 잔여량을 리턴. 
 	function price0CumulativeLast() external view returns (uint);

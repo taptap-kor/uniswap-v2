@@ -1,23 +1,28 @@
 // 상속받은 IUniswapV2ERC20 컨트랙트 함수 분석
 // https://docs.uniswap.org/contracts/v2/reference/smart-contracts/Pair-ERC-20
 
-pragma solidity >=0.5.0;
-
 interface IUniswapV2ERC20 {
   event Approval(address indexed owner, address indexed spender, uint value);
 	// approve와 permit이 실행되었을때 이벤트 발생 (owner, spender, value)
   event Transfer(address indexed from, address indexed to, uint value);
 	// transfer, transferFrom, mint, burn이 실행되었을때 이벤트 발생 (from, to, value)
   function name() external pure returns (string memory);
-	// Returns 'Uniswap V2' for all pairs.
+	// 생성할 토큰 페어의 이름을 출력
+	// 하지만 항상 'Uniswap V2'으로 출력이 되는데, 페어의 이름은 중요하지 않다.
+	// 만약 유저들이 직접 이름을 명시할 수 있다고 가정하면, 이런 경우가 생길 수 있다.
+	// ETH-DAI라고 명시된 컨트랙트를 이용해야한다고 가정해보자.
+	// 사기꾼들은 이를 이름만 ETH-DAI지 실제로는 다른 토큰페어를 만들어 컨트랙트만 게시해놓을 수 있다.
+	// 이럴경우, 페어에 관한 컨트랙트주소를 확인하지 않는 유저들은 가치없는 토큰을 스왑할 가능성이 크다.
+	// 참고 : https://stackoverflow.com/questions/71186038/uniswap-v2-erc20-token-solidity-code-are-token-names-hard-coded
+
   function symbol() external pure returns (string memory);
-	// Returns UNI-V2 for all pairs.
+	// 모든 페어에 대해 UNI-V2 가 출력된다. 이유는 위 name과 같다.
   function decimals() external pure returns (uint8);
-	// Returns 18 for all pairs.
+	// 모든 페어에 대해 18이 출력된다. 소수점 아래 수 18자리까지인 듯하다.
   function totalSupply() external view returns (uint);
-	// 페어에 관한 토큰 총개수를 리턴
+	// 만들고자하는 페어에 관한 토큰(ERC20)의 총 발행량을 출력
   function balanceOf(address owner) external view returns (uint);
-	// 파라미터로 들어온 주소에 들어있는 토큰 개수 리턴
+	// Owner가 가지고 있는 페어에 관한 토큰(ERC20)양
   function allowance(address owner, address spender) external view returns (uint);
 	// spender가 transferFrom을 통해 보낼 수 있는 유동성 토큰양을 리턴
   function approve(address spender, uint value) external returns (bool);
