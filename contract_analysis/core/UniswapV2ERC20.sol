@@ -20,7 +20,9 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
     bytes32 public constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     mapping(address => uint) public nonces;
 		// owner[논스값]으로 매핑
-
+		// 수신자가 디지털 서명을 위조하는건 불가능 하지만, 같은 트랜잭션을 여러번 보내는것은 가능하다. (리플레이 공격)
+    // 이걸 막기위해 nonce를 사용한다. 만약 새로운 Permit의 nonce가 직전에 사용된 nonce보다 하나 더 많지 않다면, 
+		// 이걸 유효하지 않다고 간주하게된다.
     event Approval(address indexed owner, address indexed spender, uint value);
 		// approve와 permit이 실행되었을때 이벤트 발생 (owner, spender, value)
     event Transfer(address indexed from, address indexed to, uint value);
@@ -105,7 +107,8 @@ contract UniswapV2ERC20 is IUniswapV2ERC20 {
     }
 
     function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external {
-        require(deadline >= block.timestamp, 'UniswapV2: EXPIRED');
+        // 권한을 구현하는 기능. 관련된 필드의 파라미터와 v,r,s인 스칼라 값을 받아온다.
+				require(deadline >= block.timestamp, 'UniswapV2: EXPIRED');
 				// 데드라인이 블록의 타임스탬프보다 크다면, 아직 유효
 				// 그 반대라면 데드라인을 넘은것이므로 EXPIRED라는 에러 발생
         bytes32 digest = keccak256(
